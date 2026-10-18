@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agenda de Barbería</title>
+</head>
+<body>
+  <h1>Agenda de Citas - Andy The Barbers</h1>
+
+  <form id="formCita">
+    <label>Nombre: <input type="text" id="nombre"></label><br><br>
+    <label>Día: <input type="text" id="dia"></label><br><br>
+    <label>Hora: <input type="text" id="hora"></label><br><br>
+    <button type="submit">Agendar Cita</button>
+  </form>
+
+  <h2>Citas Guardadas:</h2>
+  <ul id="listaCitas"></ul>
+
+  <script>
+    let citas = [];
+
+    document.getElementById("formCita").addEventListener("submit", function(event) {
+      event.preventDefault();
+      let nombre = document.getElementById("nombre").value;
+      let dia = document.getElementById("dia").value;
+      let hora = document.getElementById("hora").value;
+
+      let cita = { nombre, dia, hora };
+      citas.push(cita);
+
+      mostrarCitas();
+    });
+
+    function mostrarCitas() {
+      let lista = document.getElementById("listaCitas");
+      lista.innerHTML = ""; // limpiar lista
+
+      citas.forEach((cita, index) => {
+        let item = document.createElement("li");
+
+        // Texto de la cita
+        let texto = document.createTextNode(`✅ ${cita.nombre} - ${cita.dia} a las ${cita.hora}`);
+        item.appendChild(texto);
+
+        // Botón eliminar
+        let botonEliminar = document.createElement("button");
+        botonEliminar.textContent = "❌ Eliminar";
+        botonEliminar.style.marginLeft = "10px";
+        botonEliminar.onclick = function() {
+          citas.splice(index, 1); // quitar cita
+          mostrarCitas(); // refrescar lista
+        };
+
+        item.appendChild(botonEliminar);
+        lista.appendChild(item);
+      });
+    }
+  </script>
+</body>
+</html>
+
+      
+
+
