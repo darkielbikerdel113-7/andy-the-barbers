@@ -3,39 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Agenda de Citas</title>
+    <title>Panel de Administración - Andy The Barbers</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background: #f3f3f3;
-            text-align: center;
+            margin: 20px;
+            background-color: #f4f4f9;
         }
         .container {
+            max-width: 600px;
+            margin: auto;
             background: white;
-            margin: 50px auto;
             padding: 20px;
-            border-radius: 10px;
-            width: 80%;
+            border-radius: 8px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
-        h1 {
-            color: #333;
+        #loginBox {
+            text-align: center;
+            padding: 30px;
         }
-        #citas-lista {
-            text-align: left;
+        input[type="password"] {
+            padding: 8px;
+            width: 200px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 8px 15px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .hidden {
+            display: none;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+        li {
+            background: #eee;
+            margin: 8px 0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 4px;
+        }
+        .btn-borrar {
+            background-color: #dc3545;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Panel de Administrador - Todas las Citas</h1>
-        <div id="citas-lista">
-            <!-- Aquí se listarían las citas guardadas -->
-            <p>Cita de ejemplo: 20 de octubre a las 10:00 con Andy en Ambato</p>
-        </div>
+
+<div class="container">
+    <!-- PANTALLA DE ACCESO -->
+    <div id="loginBox">
+        <h2>Acceso de Administrador</h2>
+        <p>Ingresa la contraseña para ver la agenda:</p>
+        <input type="password" id="claveInput" placeholder="Contraseña">
+        <br>
+        <button onclick="verificarClave()">Entrar</button>
+        <p id="errorMsg" style="color:red; display:none;">Contraseña incorrecta</p>
     </div>
-    <script>
-        // Aquí puedes agregar un script para cargar y mostrar las citas reales
-    </script>
+
+    <!-- CONTENIDO PROTEGIDO -->
+    <div id="contenidoAdmin" class="hidden">
+        <h2>Citas Agendadas (Administración)</h2>
+        <ul id="listaAdmin"></ul>
+        <button onclick="cerrarSesion()" style="background-color: #6c757d;">Cerrar Sesión</button>
+    </div>
+</div>
+
+<script>
+    // CAMBIA AQUÍ TU CONTRASEÑA (por defecto es "1234")
+    const CLAVE_CORRECTA = "1234";
+
+    function verificarClave() {
+        const clave = document.getElementById('claveInput').value;
+        if (clave === CLAVE_CORRECTA) {
+            document.getElementById('loginBox').classList.add('hidden');
+            document.getElementById('contenidoAdmin').classList.remove('hidden');
+            cargarCitasAdmin();
+        } else {
+            document.getElementById('errorMsg').style.display = 'block';
+        }
+    }
+
+    function cargarCitasAdmin() {
+        const lista = document.getElementById('listaAdmin');
+        lista.innerHTML = "";
+        let citas = JSON.parse(localStorage.getItem('citasBarberia')) || [];
+
+        if (citas.length === 0) {
+            lista.innerHTML = "<li>No hay citas agendadas por el momento.</li>";
+            return;
+        }
+
+        citas.forEach(cita => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                <span><strong>${cita.nombre}</strong> - ${cita.dia} a las ${cita.hora}</span>
+                <button class="btn-borrar" onclick="eliminarCita(${cita.id})">Eliminar</button>
+            `;
+            lista.appendChild(li);
+        });
+    }
+
+    function eliminarCita(id) {
+        let citas = JSON.parse(localStorage.getItem('citasBarberia')) || [];
+        citas = citas.filter(cita => cita.id !== id);
+        localStorage.setItem('citasBarberia', JSON.stringify(citas));
+        cargarCitasAdmin();
+    }
+
+    function cerrarSesion() {
+        document.getElementById('claveInput').value = "";
+        document.getElementById('errorMsg').style.display = 'none';
+        document.getElementById('contenidoAdmin').classList.add('hidden');
+        document.getElementById('loginBox').classList.remove('hidden');
+    }
+</script>
+
 </body>
 </html>
