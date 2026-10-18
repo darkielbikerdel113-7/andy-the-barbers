@@ -78,7 +78,7 @@
 </div>
 
 <script>
-    // CAMBIA AQUÍ TU CONTRASEÑA (por defecto es "1234")
+    // CAMBIA AQUÍ TU CONTRASEÑA 
     const CLAVE_CORRECTA = "1234";
 
     function verificarClave() {
