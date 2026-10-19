@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Administrar Citas - Andy The Barbers</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: url('fondo-barberia.jpg') no-repeat center center fixed;
+      background-size: cover;
+      margin: 0;
+      padding: 20px;
+      color: #222;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .barbero {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      padding: 20px;
+      margin-bottom: 30px;
+    }
+
+    .barbero h2 {
+      margin-top: 0;
+      color: #000;
+    }
+
+    .cita {
+      background: #f0f0f0;
+      border-radius: 8px;
+      padding: 10px;
+      margin-top: 10px;
+    }
+
+    .formulario {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      padding: 20px;
+      margin-bottom: 30px;
+      width: 400px;
+      margin: auto;
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+
+    button {
+      margin-top: 15px;
+      width: 48%;
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .btn-agendar {
+      background: #000;
+      color: #fff;
+    }
+
+    .btn-eliminar {
+      background: #c0392b;
+      color: #fff;
+    }
+
+    .botones {
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+  <h1>Administrar Citas</h1>
+
+  <div class="formulario">
+    <label for="local">Selecciona el local:</label>
+    <select id="local">
+      <option value="">-- Selecciona --</option>
+      <option value="1">Local 1 - Municipio (Andy)</option>
+      <option value="2">Local 2 - Pichincha Alta (Josue)</option>
+    </select>
+
+    <label for="nombre">Nombre:</label>
+    <input type="text" id="nombre">
+
+    <label for="apellido">Apellido:</label>
+    <input type="text" id="apellido">
+
+    <label for="celular">Número de celular:</label>
+    <input type="tel" id="celular">
+
+    <label for="dia">Día:</label>
+    <input type="text" id="dia">
+
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha">
+
+    <label for="hora">Hora:</label>
+    <input type="time" id="hora">
+
+    <div class="botones">
+      <button class="btn-agendar" onclick="agendar()">Agendar</button>
+      <button class="btn-eliminar" onclick="eliminar()">Eliminar Todo</button>
+    </div>
+  </div>
+
+  <div class="barbero" id="andy">
+    <h2>💈 Local 1 - Andy</h2>
+    <div id="citas-andy"></div>
+  </div>
+
+  <div class="barbero" id="josue">
+    <h2>💈 Local 2 - Josue</h2>
+    <div id="citas-josue"></div>
+  </div>
+
+  <script>
+    let citasAndy = [];
+    let citasJosue = [];
+
+    function agendar() {
+      const local = document.getElementById('local').value;
+      const nombre = document.getElementById('nombre').value;
+      const apellido = document.getElementById('apellido').value;
+      const celular = document.getElementById('celular').value;
+      const dia = document.getElementById('dia').value;
+      const fecha = document.getElementById('fecha').value;
+      const hora = document.getElementById('hora').value;
+
+      if (!local || !nombre || !apellido || !celular || !dia || !fecha || !hora) {
+        alert('⚠️ Completa todos los campos.');
+        return;
+      }
+
+      const nuevaCita = { nombre, apellido, celular, dia, fecha, hora };
+
+      if (local === '1') {
+        citasAndy.push(nuevaCita);
+        citasAndy.sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+        mostrarCitas('andy', citasAndy);
+      } else if (local === '2') {
+        citasJosue.push(nuevaCita);
+        citasJosue.sort((a, b) => (a.fecha + a.hora).localeCompare(b.fecha + b.hora));
+        mostrarCitas('josue', citasJosue);
+      }
+
+      limpiarFormulario();
+    }
+
+    function mostrarCitas(barberoId, citas) {
+      const contenedor = document.getElementById(`citas-${barberoId}`);
+      contenedor.innerHTML = '';
+      citas.forEach(cita => {
+        contenedor.innerHTML += `
+          <div class="cita">
+            👤 ${cita.nombre} ${cita.apellido}<br>
+            📱 ${cita.celular}<br>
+            📅 ${cita.dia} - ${cita.fecha}<br>
+            ⏰ ${cita.hora}
+          </div>
+        `;
+      });
+    }
+
+    function limpiarFormulario() {
+      document.getElementById('local').value = '';
+      document.getElementById('nombre').value = '';
+      document.getElementById('apellido').value = '';
+      document.getElementById('celular').value = '';
+      document.getElementById('dia').value = '';
+      document.getElementById('fecha').value = '';
+      document.getElementById('hora').value = '';
+    }
+
+    function eliminar() {
+      citasAndy = [];
+      citasJosue = [];
+      document.getElementById('citas-andy').innerHTML = '';
+      document.getElementById('citas-josue').innerHTML = '';
+      alert('❌ Todas las reservas han sido eliminadas.');
+    }
+  </script>
+</body>
+</html>
