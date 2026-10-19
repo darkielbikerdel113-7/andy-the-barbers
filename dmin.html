@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Panel de Administración - Citas</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #eef2f3;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: white;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .btn-limpiar {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .btn-limpiar:hover {
+            background: #c82333;
+        }
+        .sin-citas {
+            text-align: center;
+            color: #777;
+            padding: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Panel de Administración - Listado de Citas</h1>
+        
+        <table id="tablaCitas">
+            <thead>
+                <tr>
+                    <th>Cliente</th>
+                    <th>Teléfono</th>
+                    <th>Servicio</th>
+                    <th>Fecha y Hora de Cita</th>
+                </tr>
+            </thead>
+            <tbody id="citasBody">
+                <!-- Las citas se cargarán aquí dinámicamente -->
+            </tbody>
+        </table>
+
+        <button class="btn-limpiar" onclick="borrarCitas()">Borrar Todas las Citas</button>
+    </div>
+
+    <script>
+        function cargarCitas() {
+            const tbody = document.getElementById('citasBody');
+            tbody.innerHTML = '';
+
+            let citas = JSON.parse(localStorage.getItem('citasBarberia')) || [];
+
+            if (citas.length === 0) {
+                tbody.innerHTML = <tr><td colspan="4" class="sin-citas">No hay citas registradas todavía.</td></tr>;
+                return;
+            }
+
+            citas.forEach(cita => {
+                const fila = document.نعرض(`
+                    <tr>
+                        <td>${cita.nombre}</td>
+                        <td>${cita.telefono}</td>
+                        <td>${cita.servicio}</td>
+                        <td>${cita.fecha.replace('T', ' ')}</td>
+                    </tr>
+                `);
+                tbody.innerHTML += fila;
+            });
+        }
+
+        function borrarCitas() {
+            if (confirm('¿Estás seguro de que deseas eliminar todas las citas?')) {
+                localStorage.removeItem('citasBarberia');
+                cargarCitas();
+            }
+        }
+
+        // Cargar las citas al abrir la página
+        cargarCitas();
+    </script>
+</body>
+</html>
