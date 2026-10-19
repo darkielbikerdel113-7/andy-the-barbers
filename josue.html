@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Agendar Cita en Andy The Barbers</title>
+  <!-- Aquí puedes incluir estilos CSS como en el ejemplo anterior -->
+  <style>
+    /* Tus estilos aquí */
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Agendar Cita</h1>
+
+    <label for="local">Selecciona el local:</label>
+    <select id="local">
+      <option value="">-- Selecciona --</option>
+      <option value="1">Local 1 - Río Putuchi y Río Palora (Andy)</option>
+      <option value="2">Local 2 - Pichincha Alta y Manco Cápac (Josue)</option>
+    </select>
+
+    <label for="fecha">Fecha:</label>
+    <input type="date" id="fecha">
+
+    <label for="hora">Hora:</label>
+    <input type="time" id="hora">
+
+    <button onclick="reservar()">Reservar</button>
+    <button onclick="eliminarReserva()">Eliminar Reserva</button>
+    
+    <div id="resultado"></div>
+    <div id="codigo-qr"></div>
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrious/4.0.2/qrious.min.js"></script>
+  <script>
+    function reservar() {
+      const local = document.getElementById('local').value;
+      const fecha = document.getElementById('fecha').value;
+      const hora = document.getElementById('hora').value;
+
+      if (!local || !fecha || !hora) {
+        document.getElementById('resultado').innerHTML = '⚠️ Completa todos los campos.';
+        return;
+      }
+
+      const barbero = local === '1' ? 'Andy' : 'Josue';
+      const localNombre = local === '1' ? 'Río Putuchi y Río Palora' : 'Pichincha Alta y Manco Cápac';
+
+      document.getElementById('resultado').innerHTML = `✅ Cita con ${barbero} en ${localNombre} el ${fecha} a las ${hora}.`;
+
+      // Generar el QR con la información de la cita
+      const qr = new QRious({
+        element: document.getElementById('codigo-qr'),
+        value: `Cita con ${barbero} en ${localNombre} el ${fecha} a las ${hora}`,
+        size: 150
+      });
+    }
+
+    function eliminarReserva() {
+      document.getElementById('resultado').innerHTML = '❌ Reserva eliminada.';
+      document.getElementById('codigo-qr').innerHTML = '';
+    }
+  </script>
+</body>
+</html>
