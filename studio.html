@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Agendar Cita - Andy The Barbers</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: #f4f7f6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 25px;
+            width: 420px;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #222;
+            font-size: 22px;
+        }
+        label {
+            font-weight: bold;
+            margin-top: 10px;
+            display: block;
+            color: #444;
+        }
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        button {
+            width: 100%;
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        button:hover {
+            background: #218838;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Reserva tu Cita</h1>
+        <form id="citaForm">
+            <label for="nombre">Nombre y Apellido:</label>
+            <input type="text" id="nombre" required placeholder="Ej. Carlos Pérez">
+
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" required placeholder="Ej. 0991234567">
+
+            <label for="servicio">Servicio:</label>
+            <select id="servicio">
+                <option value="Corte Clásico">Corte Clásico</option>
+                <option value="Corte + Barba">Corte + Barba</option>
+                <option value="Diseño / Fade">Diseño / Fade</option>
+            </select>
+
+            <label for="fecha">Fecha y Hora:</label>
+            <input type="datetime-local" id="fecha" required>
+
+            <button type="submit">Agendar Cita</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('citaForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            // Capturar los datos del formulario
+            const nuevaCita = {
+                nombre: document.getElementById('nombre').value,
+                telefono: document.getElementById('telefono').value,
+                servicio: document.getElementById('servicio').value,
+                fecha: document.getElementById('fecha').value,
+                creado: new Date().toLocaleString()
+            };
+
+            // Obtener citas anteriores del almacenamiento local o crear un array vacío
+            let citas = JSON.parse(localStorage.getItem('citasBarberia')) || [];
+
+            // Agregar la nueva cita
+            citas.push(nuevaCita);
+
+            // Guardar nuevamente en el almacenamiento local
+            localStorage.setItem('citasBarberia', JSON.stringify(citas));
+
+            alert('¡Cita agendada con éxito!');
+            document.getElementById('citaForm').reset();
+        });
+    </script>
+</body>
+</html>
